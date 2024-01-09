@@ -1,11 +1,13 @@
 <script setup>
 import axios from "axios";
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { COCKTAIL_BY_ID_URL } from "../constants";
 import AppLayout from "../components/AppLayout.vue";
 
 const route = useRoute();
+const router = useRouter();
+
 const cocktailId = computed(() => route.path.split("/").pop());
 const cocktail = ref(null);
 
@@ -15,21 +17,24 @@ async function getCocktail() {
 }
 getCocktail();
 
+function goBack() {
+  router.go(-1)
+}
+
 const ingredients = computed(() => {
-  const ingredients = [];
+  const ingredientsArr = [];
 
   for (let i = 1; i <= 15; i++) {
-    if(!cocktail.value[`strIngredient${i}`]) break
+    if (!cocktail.value[`strIngredient${i}`]) break;
 
-    const ingredient = {}
-    ingredient.name = cocktail.value[`strIngredient${i}`];
-    ingredient.measure = cocktail.value[`strMeasure${i}`];
+    const ingredientObj = {};
+    ingredientObj.name = cocktail.value[`strIngredient${i}`];
+    ingredientObj.measure = cocktail.value[`strMeasure${i}`];
 
-    ingredients.push(ingredient)
+    ingredientsArr.push(ingredientObj);
   }
-
-  return ingredients
-})
+  return ingredientsArr;
+});
 
 </script>
 
@@ -37,14 +42,26 @@ const ingredients = computed(() => {
   <div
     class="wrap"
     v-if="cocktail">
-    <AppLayout :imgUrl="cocktail.strDrinkThumb">
+    <AppLayout :imgUrl="cocktail.strDrinkThumb" :backFunc="goBack">
       <div class="wrapper">
         <div class="info">
           <div class="title">{{ cocktail.strDrink }}</div>
           <div class="line"></div>
-          <ul>
-            <li>{{}}</li>
-          </ul>
+          <div class="list">
+            <div
+              v-for="(ingredient, index) in ingredients"
+              :key="index"
+              class="list-item">
+              {{ ingredient.name }}
+              <template v-if="ingredient.measure">
+                |
+                {{ ingredient.measure }}
+              </template>
+            </div>
+          </div>
+          <div class="instructions">
+            {{ cocktail.strInstructions }}
+          </div>
         </div>
       </div>
     </AppLayout>
@@ -53,4 +70,7 @@ const ingredients = computed(() => {
 
 <style lang="sass" scoped>
 @import '../assets/styles/main'
+
+li
+  list-style-type: none
 </style>

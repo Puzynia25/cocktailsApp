@@ -13,12 +13,17 @@ function getCocktails() {
   rootStore.getCocktails(rootStore.ingredient);
 }
 
+function removeIngredient() {
+  rootStore.setIngredient(null)
+}
 </script>
 
 <template>
-  <AppLayout imgUrl="/src/assets/img/bg-1.jpg">
+  <AppLayout imgUrl="/src/assets/img/bg-1.jpg" :backFunc="removeIngredient" :is-back-button-visible="!!ingredient">
     <div class="wrapper">
-      <div v-if="!rootStore.ingredient || !cocktails" class="info">
+      <div
+        v-if="!rootStore.ingredient || !cocktails"
+        class="info">
         <div class="title">Choose your drink</div>
         <div class="line"></div>
         <div class="select-wrapper">
@@ -38,18 +43,22 @@ function getCocktails() {
             </el-option>
           </el-select>
         </div>
-        <div class="text">
-          Try our delicious cocktail recipes for every occasion. Find delicious cocktail recipes by ingredient through our cocktail generator.
-        </div>
-        <img src="../assets/img/cocktails.png" alt="Cocktails" class="img">
+        <div class="text">Try our delicious cocktail recipes for every occasion. Find delicious cocktail recipes by ingredient through our cocktail generator.</div>
+        <img
+          src="../assets/img/cocktails.png"
+          alt="Cocktails"
+          class="img" />
       </div>
-      <div v-else class="info">
+      <div
+        v-else
+        class="info">
         <div class="title">COCKTAILS WITH {{ rootStore.ingredient }}</div>
         <div class="line"></div>
-        <div class="cocktails" >
-
-          <CocktailThumb v-for="cocktail in cocktails" :key="cocktails.idDrink" :cocktail="cocktail"/>
-
+        <div class="cocktails">
+          <CocktailThumb
+            v-for="cocktail in cocktails"
+            :key="cocktails.idDrink"
+            :cocktail="cocktail" />
         </div>
       </div>
     </div>

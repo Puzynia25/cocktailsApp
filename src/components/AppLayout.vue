@@ -1,41 +1,59 @@
 <script setup>
+import { computed } from "vue";
 import { Back } from "@element-plus/icons-vue";
+import { useRoute, useRouter } from "vue-router";
+import { ROUTES_PATHS } from "@/constants";
 
 const props = defineProps({
-  imgUrl: {
-    type: String,
-    required: true,
-  },
-  backFunc: {
-    type: Function,
-    required: true,
-  },
-  isBackButtonVisible: {
-    type: Boolean,
-    default: true,
-  },
+    imgUrl: {
+        type: String,
+        required: true,
+    },
+    backFunc: {
+        type: Function,
+    },
+    isBackButtonVisible: {
+        type: Boolean,
+        default: true,
+    },
 });
+
+const route = useRoute();
+const router = useRouter();
+
+const routeName = computed(() => route.name);
+
+function goForCocktailRandom() {
+    if (routeName.value === ROUTES_PATHS.COCKTAIL_RANDOM) {
+        router.go(); //reload page
+    }
+    router.push(ROUTES_PATHS.COCKTAIL_RANDOM);
+}
 </script>
 
 <template>
-  <div class="root">
-    <div
-      :style="`background-image: url(${imgUrl})`"
-      class="img"></div>
-    <div class="main">
-      <div class="btns">
-        <el-button
-          v-if="isBackButtonVisible"
-          type="primary"
-          :icon="Back"
-          circle
-          class="back"
-          @click="backFunc" />
-        <el-button class="btn">Get random cocktail</el-button>
-      </div>
-      <slot></slot>
+    <div class="root">
+        <div
+            :style="`background-image: url(${imgUrl})`"
+            class="img"></div>
+        <div class="main">
+            <div class="btns">
+                <el-button
+                    v-if="isBackButtonVisible"
+                    type="primary"
+                    :icon="Back"
+                    circle
+                    class="back"
+                    @click="backFunc" />
+                <el-button
+                    class="btn"
+                    @click="goForCocktailRandom"
+                    >Get random cocktail</el-button
+                >
+            </div>
+            <slot></slot>
+        </div>
     </div>
-  </div>
 </template>
 
 <style lang="sass" scoped>

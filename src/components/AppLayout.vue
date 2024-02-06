@@ -29,6 +29,10 @@ function goForCocktailRandom() {
     }
     router.push(ROUTES_PATHS.COCKTAIL_RANDOM);
 }
+
+function goBack() {
+    props.backFunc ? props.backFunc() : router.go(-1);
+}
 </script>
 
 <template>
@@ -44,11 +48,11 @@ function goForCocktailRandom() {
                     :icon="Back"
                     circle
                     class="back"
-                    @click="backFunc" />
+                    @click="goBack" />
                 <el-button
                     class="btn"
-                    @click="goForCocktailRandom"
-                    >Get random cocktail</el-button
+                    @click="goForCocktailRandom">
+                    Get random cocktail</el-button
                 >
             </div>
             <slot></slot>
